@@ -9,7 +9,6 @@
 ____________________________________________
 
 CREATE DATABASE coursePlatform
-
 CREATE TABLE
 student (id serial PRIMARY KEY, name varchar(80));
 
@@ -136,10 +135,24 @@ VALUES
 INSERT INTO
 student_testresult (student_id, testresult_id)
 SELECT
-student_id, test_id
+student_id, id
 FROM
 testresult;
 
+
+-- SELECT
+--   student.name,
+--   course.title,
+--   test.title,
+--   testresult.result
+-- FROM
+--   student_testresult
+--   JOIN student ON student.id = student_testresult.student_id
+--   JOIN student_course ON student.id = student_course.student_id
+--   JOIN course ON student_course.course_id = course.id
+--   JOIN test ON course.id = test.course_id
+--   JOIN testresult ON test.id = testresult.test_id
+-- 	;
 
 SELECT
 student.name,
@@ -147,10 +160,14 @@ course.title,
 test.title,
 testresult.result
 FROM
-student_testresult
-JOIN student ON student.id = student_testresult.student_id
-JOIN student_course ON student.id = student_course.student_id
-JOIN course ON student_course.course_id = course.id
-JOIN test ON course.id = test.course_id
-JOIN testresult ON test.id = testresult.test_id
-;
+student
+JOIN testresult ON student.id = testresult.student_id
+JOIN test ON test.id = testresult.test_id
+JOIN course ON course.id = test.course_id
+GROUP BY
+student.name,
+course.title,
+test.title,
+testresult.result
+ORDER BY
+student.name ASC;
